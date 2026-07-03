@@ -6,10 +6,12 @@ from app.telegram.bot.bot import bot, dp
 
 async def main():
     try:
+        log.info("🚀 Запуск бота")
         await dp.start_polling(bot, timeout=60)
-        log.info("Бот запущен")
-    except Exception as e:  # noqa: BLE001
-        log.exception("Бот не запущен, ошибка: ",e)
+    except Exception:  # noqa: BLE001
+        log.exception("Бот не запущен, ошибка: ")
+
+
 
 
 
