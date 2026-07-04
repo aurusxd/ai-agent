@@ -3,10 +3,13 @@ import os
 from dotenv import load_dotenv
 import requests
 
+from app.services.logger import log
+
 load_dotenv()
 
 
 def search_web(query: str) -> str:
+    log.info("Зашел в search_web")
     api_key = os.getenv("TAVILY_API_KEY")
 
     response = requests.post(

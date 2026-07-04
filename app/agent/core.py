@@ -4,7 +4,9 @@ import os
 from dotenv import load_dotenv
 from openai import OpenAI
 
+from app.tools.weather import get_weather
 from app.tools.web_search import search_web
+from app.tools.calculator import calc
 
 load_dotenv()
 
@@ -31,12 +33,48 @@ tools = [
                 "required": ["query"],
             },
         },
+    },
+        {
+        "type": "function",
+        "function": {
+            "name": "calculator",
+            "description": "Вычисляет математическое выражение",
+            "parameters": {
+                "type": "object",
+                "properties": {
+                    "query": {
+                        "type": "string",
+                        "description": "Математическое выражение",
+                    }
+                },
+                "required": ["expression"],
+            },
+        },
+    },
+    {
+        "type": "function",
+        "function": {
+            "name": "weather",
+            "description": "Получает текущую погоду в указанном городе",
+            "parameters": {
+                "type": "object",
+                "properties": {
+                    "query": {
+                        "type": "string",
+                        "description": "Название города, например Moscow, Tokyo",
+                    }
+                },
+                "required": ["city"],
+            },
+        },
     }
 ]
 
 
 available_tools = {
     "search_web": search_web,
+    "calculator": calc,
+    "weather": get_weather
 }
 
 
@@ -53,6 +91,8 @@ async def ask_agent(user_message: str) -> str:
 2. Если вопрос про новости, цены, версии библиотек, вакансии, погоду, компании, события — используй search_web.
 3. Если вопрос можно решить без интернета — отвечай сам.
 4. Не выдумывай факты. Если использовал интернет, опирайся на найденные данные.
+5. Если пользователь написал математическое выражение - используй calculator
+6. Если пользователь просит узнать прогноз погоды - используй weather
 
 Формат ответа:
 - Не используй Markdown.
@@ -93,7 +133,7 @@ async def ask_agent(user_message: str) -> str:
             {
                 "role": "tool",
                 "tool_call_id": tool_call.id,
-                "content": tool_result,
+                "content": str(tool_result),
             }
         )
 

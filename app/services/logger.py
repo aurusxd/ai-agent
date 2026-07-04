@@ -11,7 +11,7 @@ class AppLogger:
 
     def __init__(  # noqa: PLR0913
         self,
-        log_dir: str = "backend/logs",
+        log_dir: str = "./logs",
         log_file: str = "app.log",
         max_size: str = "5 MB",
         retention: int = 5,
@@ -113,7 +113,7 @@ def setup_logger(**kwargs):
 
 
 log = setup_logger(
-    log_dir="backend/logs",
+    log_dir="./logs",
     log_file="app.log",
     max_size="10 MB",
     retention=5,
